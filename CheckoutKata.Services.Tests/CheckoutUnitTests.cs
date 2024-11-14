@@ -1,4 +1,5 @@
 using System;
+using CheckoutKata.Services.Interfaces;
 using CheckoutKata.Services.Model;
 
 
@@ -85,9 +86,66 @@ namespace CheckoutKata.Services.Tests
             Assert.Throws<ArgumentNullException>(() => new Checkout(null));
         }
 
+       
+        [Fact]
+        public void WhenCustomRules_ShouldUseCustomPricing()
+        {
+            var customRules = new[]
+            {
+                new PricingRule("X", 10, new SpecialOffer(2, 15)),
+                new PricingRule("Y", 20)
+            };
+
+            ICheckout checkout = new Checkout(customRules);
+            checkout.Scan("X");
+            checkout.Scan("X");
+            checkout.Scan("Y");
+            Assert.Equal(35, checkout.GetTotalPrice()); 
+        }
+
+       
+
+        [Theory]
+        [InlineData(new[] { "A", "A", "A", "B", "B", "D" }, 190)]  // 3A special (130) + 2B special (45) + D (15)
+        [InlineData(new[] { "B", "A", "B", "A", "A", "C" }, 195)]  // 3A special (130) + 2B special (45) + C (20)
+        [InlineData(new[] { "D", "B", "D", "A", "B", "A", "A" }, 205)]  // 3A special (130) + 2B special (45) + 2D (30)
+        public void WhenComplexScenarios_ShouldCalculateCorrectly(string[] items, int expectedTotal)
+        {
+            ICheckout checkout = new Checkout(CreateDefaultRules());
+            foreach (var item in items)
+            {
+                checkout.Scan(item);
+            }
+            Assert.Equal(expectedTotal, checkout.GetTotalPrice());
+        }
+        
+
+        [Fact]
+        public void WhenLargeQuantity_ShouldCalculateCorrectly()
+        {
+            ICheckout checkout = new Checkout(CreateDefaultRules());
+            // Scan 10 of each item
+            for (int i = 0; i < 10; i++)
+            {
+                checkout.Scan("A"); 
+                checkout.Scan("B"); 
+                checkout.Scan("C"); 
+                checkout.Scan("D");  
+            }
+            Assert.Equal(1015, checkout.GetTotalPrice());
+        }
 
 
-
+        [Theory]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData(null)]
+        public void WhenInvalidItemFormat_ShouldThrowException(string invalidItem)
+        {
+            ICheckout checkout = new Checkout(CreateDefaultRules());
+            Assert.Throws<ArgumentException>(() => checkout.Scan(invalidItem));
+        }
+       
 
 
     }
