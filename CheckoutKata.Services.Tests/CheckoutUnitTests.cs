@@ -51,6 +51,21 @@ namespace CheckoutKata.Services.Tests
             Assert.Equal(45, checkout.GetTotalPrice());
         }
 
+        [Theory]
+        [InlineData(new[] { "A", "A", "A" }, 130)]  // 3A special price
+        [InlineData(new[] { "B", "B" }, 45)]        // 2B special price
+        [InlineData(new[] { "A", "A", "A", "A" }, 180)]  // 3A special + 1A normal
+        [InlineData(new[] { "B", "B", "B" }, 75)]   // 2B special + 1B normal
+        public void WhenMultipleItems_ShouldApplySpecialPrice(string[] items, int expectedTotal)
+        {
+        var checkout = new Checkout();
+        foreach (var item in items)
+        {
+            checkout.Scan(item);
+        }
+            Assert.Equal(expectedTotal, checkout.GetTotalPrice());
+        }
+
        
        
 
