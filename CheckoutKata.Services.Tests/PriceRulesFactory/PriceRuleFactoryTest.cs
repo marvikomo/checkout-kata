@@ -15,13 +15,12 @@ namespace CheckoutKata.Services.Tests.PriceRulesFactory
             var rules = new[] { new PricingRule("A", 50) };
 
             // Act
-            var priceRules = PriceRuleFactory.Create(rules);
+            var priceRules = PriceRuleFactory.CreatePricingRules(rules);
 
             // Assert
-            var priceRule = priceRules.Single();
-            Assert.IsType<SimplePriceRule>(priceRule);
-            Assert.Equal("A", priceRule.Item);
-            Assert.Equal(50, priceRule.CalculateTotal(1));
+            Assert.Single(priceRules);
+            Assert.IsType<SimplePriceRule>(priceRules["A"]);
+            Assert.Equal(50, priceRules["A"].CalculateTotal(1));
         }
 
         [Fact]
@@ -31,12 +30,11 @@ namespace CheckoutKata.Services.Tests.PriceRulesFactory
             new PricingRule("A", 50, new SpecialOffer(3, 130))
             };
 
-            var pricerRules = PriceRuleFactory.Create(rules);
+            var pricerRules = PriceRuleFactory.CreatePricingRules(rules);
 
-            var pricerRule = pricerRules.Single();
-            Assert.IsType<SpecialPriceRule>(pricerRule);
-            Assert.Equal("A", pricerRule.Item);
-            Assert.Equal(130, pricerRule.CalculateTotal(3));
+            Assert.Single(pricerRules);
+            Assert.IsType<SpecialPriceRule>(pricerRules["A"]);
+            Assert.Equal(130, pricerRules["A"].CalculateTotal(3));
         }
 
         [Fact]
@@ -48,28 +46,29 @@ namespace CheckoutKata.Services.Tests.PriceRulesFactory
             new PricingRule("C", 20)
             };
 
-            var pricingRules = PriceRuleFactory.Create(rules).ToList();
+            var pricingRules = PriceRuleFactory.CreatePricingRules(rules);
 
             Assert.Equal(3, pricingRules.Count);
-            Assert.IsType<SpecialPriceRule>(pricingRules[0]);
-            Assert.IsType<SimplePriceRule>(pricingRules[1]);
-            Assert.IsType<SimplePriceRule>(pricingRules[2]);
+            Assert.IsType<SpecialPriceRule>(pricingRules["A"]);
+            Assert.IsType<SimplePriceRule>(pricingRules["B"]);
+            Assert.IsType<SimplePriceRule>(pricingRules["C"]);
 
-            Assert.Equal("A", pricingRules[0].Item);
-            Assert.Equal("B", pricingRules[1].Item);
-            Assert.Equal("C", pricingRules[2].Item);
+            // Verify calculations
+            Assert.Equal(130, pricingRules["A"].CalculateTotal(3));  // Special price for A
+            Assert.Equal(60, pricingRules["B"].CalculateTotal(2));   // Normal price for B
+            Assert.Equal(40, pricingRules["C"].CalculateTotal(2));   // Special price for C
         }
 
         [Fact]
         public void Create_WithNullRules_ShouldThrowArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => PriceRuleFactory.Create(null).ToList());
+            Assert.Throws<ArgumentNullException>(() => PriceRuleFactory.CreatePricingRules(null));
         }
 
         [Fact]
         public void Create_WithEmptyRules_ShouldReturnEmptyCollection()
         {
-            var pricers = PriceRuleFactory.Create(Enumerable.Empty<PricingRule>());
+            var pricers = PriceRuleFactory.CreatePricingRules(Enumerable.Empty<PricingRule>());
             Assert.Empty(pricers);
         }
 
