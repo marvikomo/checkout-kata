@@ -24,6 +24,12 @@ namespace CheckoutKata.Services.Tests
             Assert.Equal(expectedPrice, checkout.GetTotalPrice());
         }
 
+        [Fact]
+        public void WhenInvalidItem_ShouldThrowException(){
+            var checkout = new Checkout();
+            Assert.Throws<ArgumentException>( () => checkout.Scan("X"));
+        }
+
        
        
 
