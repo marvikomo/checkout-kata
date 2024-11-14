@@ -79,6 +79,12 @@ namespace CheckoutKata.Services.Tests
             Assert.Equal(expectedTotal, checkout.GetTotalPrice());
         }
 
+        [Fact]
+        public void WhenNullRules_ShouldThrowArgumentNullException()
+        {
+            Assert.Throws<ArgumentNullException>(() => new Checkout(null));
+        }
+
 
 
 
