@@ -12,7 +12,14 @@ namespace CheckoutKata.Services.Factories
     {
         public static IEnumerable<IPricingRule> Create(IEnumerable<PricingRule> rules)
         {
-            return rules.Select(rule => new SimplePriceRule(rule.Item, rule.UnitPrice));
+            if (rules == null)
+                throw new ArgumentNullException(nameof(rules));
+
+            return rules.Select<PricingRule, IPricingRule>(rule =>
+                rule.Special != null
+                    ? new SpecialPriceRule(rule.Item, rule.UnitPrice, rule.Special.Quantity, rule.Special.SpecialPrice)
+                    : new SimplePriceRule(rule.Item, rule.UnitPrice)
+            );
         }
     }
 }
