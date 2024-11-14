@@ -41,6 +41,16 @@ namespace CheckoutKata.Services.Tests
             Assert.Equal(130, checkout.GetTotalPrice());
         }
 
+
+        [Fact]
+        public void WhenTwoBs_ShouldApplySpecialPrice()
+        {
+            var checkout = new Checkout();
+            checkout.Scan("B");
+            checkout.Scan("B");
+            Assert.Equal(45, checkout.GetTotalPrice());
+        }
+
        
        
 

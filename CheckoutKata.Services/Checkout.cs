@@ -15,6 +15,13 @@ namespace CheckoutKata.Services
             { "C", 20 },
             { "D", 15 }
         };
+
+        private readonly Dictionary<string, (int quantity, int specialPrice)> _specialOffers = new()
+        {
+            { "A", (3, 130) },
+            { "B", (2, 45) }
+        };
+
         public Checkout() {
 
         }
@@ -37,15 +44,16 @@ namespace CheckoutKata.Services
             string sku = item.Key;
             int quantity = item.Value;
 
-            if(sku == "A") 
+            if(_specialOffers.ContainsKey(sku))
             {
-                int groupsOfThree = quantity / 3;
-                int remainingAs = quantity % 3;
-                total += (groupsOfThree * 130) + (remainingAs * 50);
+                var (specialQuantity, specialPrice) = _specialOffers[sku];
+                int specialGroups = quantity / specialQuantity;
+                int remainingItems = quantity % specialQuantity;
+                total += (specialGroups * specialPrice) + (remainingItems * _prices[sku]);
             }
             else
             {
-            total += quantity * _prices[sku];
+                 total += quantity * _prices[sku];
             }
             
           }
