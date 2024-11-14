@@ -34,11 +34,21 @@ namespace CheckoutKata.Services
           int total = 0;
           foreach (var item in _scannedItems)
           {
+            string sku = item.Key;
+            int quantity = item.Value;
 
-            total += item.Value * _prices[item.Key];
+            if(sku == "A") 
+            {
+                int groupsOfThree = quantity / 3;
+                int remainingAs = quantity % 3;
+                total += (groupsOfThree * 130) + (remainingAs * 50);
+            }
+            else
+            {
+            total += quantity * _prices[sku];
+            }
             
           }
-
           return total;
         }
     }
