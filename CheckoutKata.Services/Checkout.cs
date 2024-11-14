@@ -7,6 +7,14 @@ namespace CheckoutKata.Services
     public class Checkout : ICheckout
     {
         private readonly Dictionary<string, int> _scannedItems = new();
+
+         private readonly Dictionary<string, int> _prices = new()
+        {
+            { "A", 50 },
+            { "B", 30 },
+            { "C", 20 },
+            { "D", 15 }
+        };
         public Checkout() {
 
         }
@@ -19,7 +27,15 @@ namespace CheckoutKata.Services
         }
 
         public int GetTotalPrice() {
-           return _scannedItems.GetValueOrDefault("A", 0) * 50;
+          int total = 0;
+          foreach (var item in _scannedItems)
+          {
+
+            total += item.Value * _prices[item.Key];
+            
+          }
+
+          return total;
         }
     }
 }
