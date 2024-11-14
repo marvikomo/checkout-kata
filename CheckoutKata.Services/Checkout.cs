@@ -22,6 +22,8 @@ namespace CheckoutKata.Services
 
         public void Scan(string item)
         {
+            if (string.IsNullOrWhiteSpace(item))
+                throw new ArgumentException("Item cannot be null or empty");
             if (!pricingRules.ContainsKey(item))
                 throw new ArgumentException($"Invalid item: {item}");
 
