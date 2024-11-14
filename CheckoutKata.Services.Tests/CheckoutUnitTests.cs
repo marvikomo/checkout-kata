@@ -30,6 +30,17 @@ namespace CheckoutKata.Services.Tests
             Assert.Throws<ArgumentException>( () => checkout.Scan("X"));
         }
 
+        [Fact]
+        public void WhenThreeAs_ShouldApplySpecialPrice()
+        {
+            var checkout = new Checkout();
+            checkout.Scan("A");
+            checkout.Scan("A");
+            checkout.Scan("A");
+
+            Assert.Equal(130, checkout.GetTotalPrice());
+        }
+
        
        
 
