@@ -7,6 +7,7 @@ namespace CheckoutKata.Services.Interfaces
 {
     public interface IPricingRule
     {
+        string Item { get; }
         int CalculateTotal(int quantity);
     }
 }

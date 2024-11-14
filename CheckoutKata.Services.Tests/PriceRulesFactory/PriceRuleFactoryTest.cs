@@ -1,8 +1,10 @@
 using System;
+using CheckoutKata.Services.Model;
 using CheckoutKata.Services.PricingRules;
+using CheckoutKata.Services.Factories;
 
 
-namespace CheckoutKata.Services.Tests.PriceRuleFactory
+namespace CheckoutKata.Services.Tests.PriceRulesFactory
 {
     public class PriceRuleFactoryTest
     {
