@@ -20,6 +20,10 @@ namespace CheckoutKata.Services
         }
 
         public void Scan(string item) {
+            if(!_prices.ContainsKey(item))
+            {
+                throw new ArgumentException($"Invalid item: {item}");
+            }
             if(!_scannedItems.ContainsKey(item))
                 _scannedItems[item] = 0;
             _scannedItems[item]++;
