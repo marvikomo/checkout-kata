@@ -1,4 +1,4 @@
-# BrightHR Checkout Kata
+# Checkout Kata
 
 This project implements a checkout system for an online store, following the principles of the Checkout Kata. The system allows users to scan items, calculate total prices, and apply special pricing rules based on item quantity.
 
