@@ -62,6 +62,6 @@ This project is divided into several modules:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/marvikomo/brighthr-checkout-kata.git
+   git clone https://github.com/marvikomo/checkout-kata.git
    cd brighthr-checkout-kata
 
